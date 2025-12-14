@@ -1,26 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {assets} from '../assets/frontend_assets/assets'
+import { assets } from '../assets/frontend_assets/assets'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
 const Navbar = () => {
   const [visibel, setVisibel] = useState(false)
-  const {setshowSearch , showSearch , getCartCount , totalCount} = useContext(ShopContext)
+  const { setshowSearch, showSearch, getCartCount, totalCount } = useContext(ShopContext)
   const location = useLocation()
   const navigate = useNavigate()
-  const navigateFun=()=>{
-    if(location.pathname.includes('collection')){
-    
+  const navigateFun = () => {
+    if (location.pathname.includes('collection')) {
+
     }
-    else{
+    else {
       setshowSearch(true)
       navigate('/collection')
     }
   }
-  
+
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
       <Link to='/'>
-        <img src={assets.logo} alt='logo' className='w-36'/>
+        <img src={assets.logo} alt='logo' className='w-36' />
       </Link>
 
       <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
@@ -42,19 +42,21 @@ const Navbar = () => {
         <NavLink to='/contact' className='flex flex-col items-center gap-1'>
           <p>CONTACT</p>
           <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
-        </NavLink>  
+        </NavLink>
       </ul>
 
       <div className='flex items-center gap-6'>
-        <img src={assets.search_icon} className='w-5 cursor-pointer' onClick={()=>{setshowSearch(!showSearch),navigateFun()}}/>
+        <img src={assets.search_icon} className='w-5 cursor-pointer' onClick={() => { setshowSearch(!showSearch), navigateFun() }} />
         <div className='group relative'>
-          <img className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
+          <Link to='/logIn'>
+            <img className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
+          </Link>
           {/* ??? */}
           <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
             <div className="flex flex-col gap-2 w-36 px-5 py-6 bg-slate-100 text-gray-500 rounded">
-              <p  className='cursor-pointer hover:text-black'>My Profile</p>
-              <p  className='cursor-pointer hover:text-black'>Orders</p>
-              <p  className='cursor-pointer hover:text-black'>Log Out</p> 
+              <p className='cursor-pointer hover:text-black'>My Profile</p>
+              <p className='cursor-pointer hover:text-black'>Orders</p>
+              <p className='cursor-pointer hover:text-black'>Log Out</p>
             </div>
           </div>
         </div>
@@ -63,27 +65,27 @@ const Navbar = () => {
           <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{totalCount}</p>
         </Link>
 
-        
-        <img onClick={()=>setVisibel(true)} src={assets.menu_icon} alt="" className='w-5 cursor-pointer sm:hidden' />
+
+        <img onClick={() => setVisibel(true)} src={assets.menu_icon} alt="" className='w-5 cursor-pointer sm:hidden' />
       </div>
       {/* sidebar menu for small screen &&pass the dynamic classname */}
-      <div className={`absolute top-0 right-0 bottom-0 orverflow-hidden bg-white transition-all ${visibel?'w-full':'hidden'}`}>
+      <div className={`absolute top-0 right-0 bottom-0 orverflow-hidden bg-white transition-all ${visibel ? 'w-full' : 'hidden'}`}>
         <div className="flex flex-col text-gray-600">
-          <div className='flex items-center gap-4 p-3 cursor-pointer' onClick={()=>setVisibel(false)}  >
+          <div className='flex items-center gap-4 p-3 cursor-pointer' onClick={() => setVisibel(false)}  >
             <img src={assets.dropdown_icon} className='h-4 rotate-180 ' alt="" />
             <p className=''>Back</p>
           </div>
 
-          <NavLink to='/' className='py-2 pl-6 border' onClick={()=>setVisibel(false)}>
+          <NavLink to='/' className='py-2 pl-6 border' onClick={() => setVisibel(false)}>
             Home
           </NavLink>
-          <NavLink to='/collection' className='py-2 pl-6 border' onClick={()=>setVisibel(false)}>
+          <NavLink to='/collection' className='py-2 pl-6 border' onClick={() => setVisibel(false)}>
             Collection
           </NavLink>
-          <NavLink to='/about' className='py-2 pl-6 border' onClick={()=>setVisibel(false)}>
+          <NavLink to='/about' className='py-2 pl-6 border' onClick={() => setVisibel(false)}>
             About
           </NavLink>
-          <NavLink to='/contact' className='py-2 pl-6 border' onClick={()=>setVisibel(false)}>
+          <NavLink to='/contact' className='py-2 pl-6 border' onClick={() => setVisibel(false)}>
             Contact
           </NavLink>
         </div>
@@ -91,7 +93,7 @@ const Navbar = () => {
 
       </div>
     </div>
-    
+
   )
 }
 

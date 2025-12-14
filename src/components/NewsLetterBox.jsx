@@ -6,7 +6,7 @@ const NewsLetterBox = () => {
   })
   return (
     <div className='text-center mb-2 '>
-      <p className='text-2xl font-medium text-gray-800'>
+      <p className='text-2xl font-medium  text-gray-800'>
         Subscribe now and get 20% off
       </p>
       <p className="text-gray-400 mt-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repudiandae repellendus ex, saepe similique qui a ullam laborum explicabo nemo? Laboriosam.</p>
