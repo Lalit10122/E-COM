@@ -1,0 +1,80 @@
+import userModel from "../models/user.model.js";
+import validator from "validator";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const createToken = (id) => {
+  return jwt.sign(
+    {
+      id,
+    },
+    process.env.JWT_SECRET
+  );
+};
+
+// route for user log in
+const logInUser = async (req, res) => {};
+
+// route for user register
+const registerUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    // checking user already exists or not
+    const exists = await userModel.findOne({email});
+    if (exists) {
+      return res.json({
+        sussess: false,
+        message: "user already exists",
+      });
+    }
+
+    // validation email format and strong pass
+    if (!validator.isEmail(email)) {
+      return res.json({
+        sussess: false,
+        message: "Please enter a valid email",
+      });
+    }
+
+    // validatin of strong pass
+    if (password.length < 8) {
+      return res.json({
+        sussess: false,
+        message: "Please enter a strong password",
+      });
+    }
+
+    // Hashing user password
+    const salt = await bcrypt.genSalt(10);
+    const hashPass = await bcrypt.hash(password, salt);
+
+    const newUser = new userModel({
+      name,
+      email,
+      password: hashPass,
+    });
+
+    const user = await newUser.save();
+
+    // generate token so the user can log in
+    const token = createToken(user._id);
+
+    res.json({
+      success: true,
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: flase,
+      message:error.message,
+    });
+  }
+};
+
+// route for admin logIN
+
+const adminLogIn = async (req, res) => {};
+
+export { logInUser, adminLogIn, registerUser };
