@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema({
     type:String,
     required:true
   },
-  sybCategory:{
+  subCategory:{
     type:String,
     required:true
   },

@@ -13,7 +13,43 @@ const createToken = (id) => {
 };
 
 // route for user log in
-const logInUser = async (req, res) => {};
+const logInUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({
+        sussess: false,
+        message: "User does not exists",
+      });
+    }
+
+    
+
+    const isMatchPass = await bcrypt.compare(password, user.password);
+
+    if (isMatchPass) {
+      const token = createToken(user._id);
+      res.json({
+        success: true,
+        userName:user.name,
+        token,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Invalid creadentials",
+        
+      });
+    }
+  } catch (error) {
+    res.json({
+      success: flase,
+      message: error.message,
+    });
+  }
+};
 
 // route for user register
 const registerUser = async (req, res) => {
@@ -21,7 +57,7 @@ const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     // checking user already exists or not
-    const exists = await userModel.findOne({email});
+    const exists = await userModel.findOne({ email });
     if (exists) {
       return res.json({
         sussess: false,
@@ -68,7 +104,7 @@ const registerUser = async (req, res) => {
     console.log(error);
     res.json({
       success: flase,
-      message:error.message,
+      message: error.message,
     });
   }
 };
