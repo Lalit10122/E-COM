@@ -25,22 +25,19 @@ const logInUser = async (req, res) => {
       });
     }
 
-    
-
     const isMatchPass = await bcrypt.compare(password, user.password);
 
     if (isMatchPass) {
       const token = createToken(user._id);
       res.json({
         success: true,
-        userName:user.name,
+        userName: user.name,
         token,
       });
     } else {
       res.json({
         success: false,
         message: "Invalid creadentials",
-        
       });
     }
   } catch (error) {
@@ -112,7 +109,30 @@ const registerUser = async (req, res) => {
 // route for admin logIN
 
 const adminLogIn = async (req, res) => {
-  
+  try {
+    const { email, password } = req.body;
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      const token = jwt.sign(email + password, process.env.JWT_SECRET);
+      res.json({
+        success: true,
+        token,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Invalid creadential",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: flase,
+      message: error.message,
+    });
+  }
 };
 
 export { logInUser, adminLogIn, registerUser };
