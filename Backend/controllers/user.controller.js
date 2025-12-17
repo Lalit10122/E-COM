@@ -111,6 +111,8 @@ const registerUser = async (req, res) => {
 
 // route for admin logIN
 
-const adminLogIn = async (req, res) => {};
+const adminLogIn = async (req, res) => {
+  
+};
 
 export { logInUser, adminLogIn, registerUser };
