@@ -135,4 +135,42 @@ const adminLogIn = async (req, res) => {
   }
 };
 
-export { logInUser, adminLogIn, registerUser };
+// route for check token is correct
+
+const isTokenCorrect = async (req, res) => {
+  try {
+    const {token } = req.body;
+    if (!token){
+      return res.json({
+        permission: false,
+        success: false,
+        message: "Not correct token",
+      });
+    }
+    const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+    if (tokenDecode != process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
+      return res.json({
+        permission: false,
+        success: false,
+        message: "Not correct token",
+      });
+    }
+    else{
+      return res.json({
+        permission: true,
+        success: true,
+        message: "correct token",
+      });
+    }
+  } catch (error) {
+    // console.log(error);
+    res.json({
+      permission: false,
+      success: false,
+      message: error.message,
+    });
+ 
+  }
+};
+
+export { logInUser, adminLogIn, registerUser , isTokenCorrect };
