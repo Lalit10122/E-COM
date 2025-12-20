@@ -12,6 +12,7 @@ import axios from 'axios'
 // import 'react-toastify/dist/ReactToastify.css';
 
 export const backEndUrl = import.meta.env.VITE_BACKEND_URL
+export const currency ='₹';
 
 const App = () => {
   const [token, settoken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):"")
