@@ -15,7 +15,7 @@ const ShopContextProvider = (props)=>{
   const [totalCount , setTotalCount] = useState(0)
   const [products, setproducts] = useState([])
   const navigate = useNavigate();
-
+  const [token, settoken] = useState('')
   const addToCart = async(itemId , size)=>{
     let cartData = structuredClone(cartItems)
 
@@ -73,6 +73,7 @@ const ShopContextProvider = (props)=>{
         try {
           if(cartItems[items][item]>0){
             totalAmmount += itemInfo.price * cartItems[items][item]
+
           }
         } catch (error) {
           
@@ -86,10 +87,15 @@ const ShopContextProvider = (props)=>{
   const getProductsData = async ()=>{
     try {
       const response = await axios.get(backendUrl+'/api/product/list')
-      console.log(response.data)
+      if(response.data.success){
+        setproducts(response.data.products)
+      }else{
+        toast.error(response.data.message)
+      }
       
     }catch (error) {
-      
+      console.log(error)
+      toast.error(error.message)
     }
   }
 
@@ -104,9 +110,15 @@ const ShopContextProvider = (props)=>{
       // console.log(totalCount)
     },[cartItems])
 
+    useEffect(()=>{
+      if(!token && localStorage.getItem('token')){
+        settoken(localStorage.getItem('token'))
+      }
+    },[])
+
 
   const value ={
-    products,currency,delivery_fee,search,setsearch,showSearch,setshowSearch,cartItems,addToCart,getCartCount,totalCount,updateQuantity , getCartAmmount , navigate,backendUrl
+    products,currency,delivery_fee,search,setsearch,showSearch,setshowSearch,cartItems,setcartItems,addToCart,getCartCount,totalCount,updateQuantity , getCartAmmount , navigate,backendUrl,settoken , token
   }
   return(
     <ShopContext.Provider value={value}>
