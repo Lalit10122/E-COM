@@ -8,7 +8,8 @@ import { toast } from 'react-toastify'
 
 const PlacedOrder = () => {
   const { navigate, backendUrl, token, cartItems, setcartItems, getCartAmmount, delivery_fee, products } = useContext(ShopContext);
-  const [method, setmethod] = useState('COD')
+  const [method, setmethod] = useState('cod')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setformData] = useState({
     firstName: '',
     lastName: '',
@@ -31,8 +32,10 @@ const PlacedOrder = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     try {
       let orderItems = []
+      setIsSubmitting(true)
 
       for (const items in cartItems) {
         for (const item in cartItems[items]) {
@@ -47,17 +50,23 @@ const PlacedOrder = () => {
           }
         }
       }
+      if (!orderItems.length) {
+        toast.error('Your cart is empty')
+        setIsSubmitting(false)
+        return
+      }
+
       let orderData = {
         address: formData,
         items: orderItems,
-        amount: getCartAmmount + delivery_fee
+        amount: getCartAmmount() + delivery_fee
       }
 
       switch (method) {
         // api call for cod
-        case 'COD': {
+        case 'cod': {
           const response = await axios.post(backendUrl + '/api/order/place', orderData, { headers: { token } })
-          console.log(response.data)
+         
           if (response.data.success) {
             setcartItems({})
             navigate('/orders')
@@ -74,6 +83,9 @@ const PlacedOrder = () => {
       }
     } catch (error) {
       console.log(error)
+      toast.error(error.message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -127,7 +139,7 @@ const PlacedOrder = () => {
           </div>
 
           <div className="w-full text-end mt-8">
-            <button type='submit' className='bg-black text-white px-16 py-3 text-sm ' >PLACE ORDER</button>
+            <button type='submit' disabled={isSubmitting} className='bg-black text-white px-16 py-3 text-sm disabled:opacity-60 disabled:cursor-not-allowed' >{isSubmitting ? 'PLACING...' : 'PLACE ORDER'}</button>
 
           </div>
         </div>
