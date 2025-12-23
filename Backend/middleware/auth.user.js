@@ -9,7 +9,7 @@ const authUser = async (req,res,next) =>{
       success:false,
       message:"Not authorized log in again"
     })
-  }
+  } 
 
   try {
     // it gives us user id
