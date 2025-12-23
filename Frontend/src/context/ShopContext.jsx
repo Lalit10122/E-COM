@@ -16,6 +16,8 @@ const ShopContextProvider = (props)=>{
   const [products, setproducts] = useState([])
   const navigate = useNavigate();
   const [token, settoken] = useState('')
+
+
   const addToCart = async(itemId , size)=>{
     let cartData = structuredClone(cartItems)
 
@@ -37,6 +39,18 @@ const ShopContextProvider = (props)=>{
       cartData[itemId][size] =1;
     }
     setcartItems(cartData)
+
+    //check make more sec.........................................
+    if(token){
+      try {
+        const resp = await axios.post(backendUrl+'/api/cart/add',{itemId,size},{headers:{token}})
+        // console.log(resp.data.message)
+        toast(resp.data.message)
+      } catch (error) {
+        console.log(error)
+        
+      }
+    }
   }
 
   let totalCountC =0;
@@ -61,6 +75,15 @@ const ShopContextProvider = (props)=>{
     let cartData = structuredClone(cartItems)
     cartData[itemId][size] = quantity
     setcartItems(cartData)
+
+    if(token){
+      try {
+        await axios.post(backendUrl+'/api/cart/update',{itemId,size,quantity},{headers:{token}})
+      } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+      }
+    }
   }
 
   const getCartAmmount = ()=>{
@@ -99,6 +122,19 @@ const ShopContextProvider = (props)=>{
     }
   }
 
+  // when we reload cart data fetch from database
+  const getUserCart = async ( token )=>{
+    try {
+      const resp = await axios.post(backendUrl + '/api/cart/get',{},{headers:{token}})
+      if(resp.data.success){
+        setcartItems(resp.data.cartData);
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
     useEffect(()=>{
       getProductsData();
     },[])
@@ -113,6 +149,7 @@ const ShopContextProvider = (props)=>{
     useEffect(()=>{
       if(!token && localStorage.getItem('token')){
         settoken(localStorage.getItem('token'))
+        getUserCart(localStorage.getItem('token'))
       }
     },[])
 
